@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>WhatsApp</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+html,body{width:100%;height:100%;background:#f0f2f5}
+
+/* ===== WHATSAPP LOGIN ===== */
+#wa{
+  width:100%;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:25px;
+}
+
+#wa h1{
+  color:#25D366;
+  margin-bottom:20px;
+}
+
+#wa p{
+  color:#444;
+  font-size:14px;
+  margin-bottom:30px;
+}
+
+#agree{
+  width:100%;
+  max-width:300px;
+  padding:14px;
+  background:#25D366;
+  color:white;
+  border:none;
+  border-radius:5px;
+  font-size:15px;
+}
+
+/* ===== LOADING ===== */
+#loading{
+  display:none;
+  width:100%;
+  height:100%;
+  background:white;
+  justify-content:center;
+  align-items:center;
+  font-size:16px;
+}
+
+/* ===== PRANK ===== */
+#prank{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:black;
+  color:#00ff88;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  animation:glitch .15s infinite;
+}
+
+#timer{font-size:46px;color:#ff3333;margin:15px}
+#log{
+  width:90%;
+  height:120px;
+  border:1px solid #00ff88;
+  padding:10px;
+  font-size:12px;
+  overflow:hidden;
+  background:#010101;
+  text-align:left;
+}
+#logo{
+  margin-top:20px;
+  padding:8px 18px;
+  border:1px solid red;
+  color:red;
+}
+
+@keyframes glitch{
+  0%{transform:translate(0)}
+  25%{transform:translate(1px,-1px)}
+  50%{transform:translate(-1px,1px)}
+  75%{transform:translate(1px,1px)}
+  100%{transform:translate(0)}
+}
+</style>
+</head>
+
+<body>
+
+<!-- WHATSAPP -->
+<div id="wa">
+  <h1>WhatsApp</h1>
+  <p>
+    WhatsApp memerlukan izin untuk melanjutkan.<br>
+    Ketuk <b>Setuju & Lanjutkan</b> untuk masuk.
+  </p>
+  <button id="agree">SETUJU & LANJUTKAN</button>
+</div>
+
+<!-- LOADING -->
+<div id="loading">Menghubungkan ke server…</div>
+
+<!-- PRANK -->
+<div id="prank">
+  <h2 style="color:red">⚠ SYSTEM LOCKED ⚠</h2>
+  <p>Semua data telah dienkripsi</p>
+  <div id="timer">04:00</div>
+  <div id="log"></div>
+  <div id="logo">ANDROID SECURITY</div>
+</div>
+
+<audio id="alarm" loop>
+  <source src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg">
+</audio>
+
+<script>
+/* ===== BUTTON FLOW ===== */
+document.getElementById("agree").onclick=()=>{
+  document.getElementById("wa").style.display="none";
+  document.getElementById("loading").style.display="flex";
+  setTimeout(()=>{
+    document.getElementById("loading").style.display="none";
+    document.getElementById("prank").style.display="flex";
+    startPrank();
+  },1500);
+};
+
+/* ===== PRANK ===== */
+const alarm=document.getElementById("alarm");
+const timerEl=document.getElementById("timer");
+const log=document.getElementById("log");
+let time=240;
+
+function startPrank(){
+  alarm.play();
+  if(navigator.vibrate) navigator.vibrate([300,200,300]);
+
+  setInterval(()=>{
+    let m=Math.floor(time/60);
+    let s=time%60;
+    timerEl.textContent=
+      String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
+    time--;
+    if(time<0) unlock();
+  },1000);
+
+  const msgs=[
+    "Encrypting chats...",
+    "Encrypting media...",
+    "Uploading key...",
+    "Disabling backup...",
+    "Locking system...",
+    "Encryption done."
+  ];
+
+  setInterval(()=>{
+    log.innerHTML+="> "+msgs[Math.floor(Math.random()*msgs.length)]+"<br>";
+    log.scrollTop=log.scrollHeight;
+  },900);
+}
+
+/* ===== EXIT RAHASIA ===== */
+let tap=0;
+document.getElementById("logo").onclick=()=>{
+  tap++;
+  if(tap>=5) unlock();
+  setTimeout(()=>tap=0,1500);
+};
+
+function unlock(){
+  alarm.pause();
+  document.body.innerHTML=`
+    <h1 style="color:#00ff88;text-align:center;margin-top:40vh">
+      😆 PRANK SELESAI 😆<br><br>
+      Ini hanya tampilan palsu
+    </h1>`;
+}
+
+window.onbeforeunload=()=> "SYSTEM LOCKED";
+</script>
+
+</body>
+</html> 
+
+Deploy in
